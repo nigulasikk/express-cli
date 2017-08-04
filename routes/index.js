@@ -1,13 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
 var db = mongoose.connection;
+
+mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
-  console.log('open!')
+  console.log(' mongo connected! open!')
 });
+var SongSchema = mongoose.Schema({
+    name: String,
+    lyrics: String
+});
+/**
+ * 这里可以定义Schema方法
+ * @return {[type]} [description]
+ */
+SongSchema.methods.speak = function () {
+  console.log('hello:' + this.name)
+}
+var Song = mongoose.model('Song', SongSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -27,7 +40,24 @@ router.get('/static.html', function(req, res, next) {
 // POST method route
 router.post('/saveSong', function (req, res) {
   console.log(req.body)
-  res.send('get request to the homepage')
+  var littleCat = new Song({ name: req.body.name, lyrics: req.body.lyrics });
+  littleCat.save(function (err, fluffy) {
+    if (err) return console.error(err);
+    console.log('存储成功！')
+    res.send('存储成功！')
+  });
 });
+
+// POST method route
+router.get('/testSaveSong', function (req, res) {
+  var littleCat = new Song({ name: 'take it easy', lyrics: '嘻哈嘻哈嘻哈' });
+  littleCat.save(function (err, fluffy) {
+    if (err) return console.error(err);
+    console.log('存储成功！')
+    res.send('存储成功！')
+  });
+});
+
+
 
 module.exports = router;
