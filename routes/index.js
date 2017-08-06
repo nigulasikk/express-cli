@@ -30,11 +30,27 @@ router.get('/', function(req, res, next) {
  * 伪静态的尝试
  * @param  {[type]} req   [description]
  * @param  {[type]} res   [description]
- * @param  {[type]} next) {             res.render('index', { title: 'Express' });} [description]
- * @return {[type]}       [description]
+ * @param  {[type]} next) 
+ * * @return {[type]}       [description]
  */
 router.get('/static.html', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.get('/songs', function(req, res, next) {
+  Song.find(function (err, allSongs) {
+    if (err) return console.error(err);
+    res.render('songs', { title:'中国有嘻哈', songs: allSongs });
+  })
+});
+
+router.get('/songDetail/:songId', function(req, res, next) {
+  var songId = req.params.songId
+  console.log(songId)
+  Song.find({ _id: songId }, function (err, songDetail) {
+    if (err) return console.error(err);
+    res.render('songDetail', { title:'songDetail', song: songDetail[0] });
+  })
 });
 
 // POST method route
@@ -48,7 +64,7 @@ router.post('/saveSong', function (req, res) {
   });
 });
 
-// POST method route
+//get测试函数
 router.get('/testSaveSong', function (req, res) {
   var littleCat = new Song({ name: 'take it easy', lyrics: '嘻哈嘻哈嘻哈' });
   littleCat.save(function (err, fluffy) {

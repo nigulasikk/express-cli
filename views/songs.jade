@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  ul
+    for song in songs
+      li 
+        a(href="/songDetail/#{song._id}") #{song.name}
+    else
+      li sorry, no songs!
