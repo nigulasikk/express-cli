@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1= title
-  ul
+  ul.song-list
     for song in songs
       li 
         a(href="/songDetail/#{song._id}") #{song.name}

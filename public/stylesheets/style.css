@@ -1,8 +1,26 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #f0f2f3;
 }
 
 a {
   color: #00B7FF;
+}
+
+.song-list li{
+  list-style: none;
+  
+}
+.song-list li a{
+  display: block;
+  color:#323232;
+  text-decoration: none;
+  height: 30px;
+  line-height: 30px;
+  padding-left:20px;
+  // border:1px solid #323232;
+  box-shadow: 0 0 8px rgba(0,0,0,.08);
+  margin-top:10px;
+  background: white;
 }
