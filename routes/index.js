@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
  * @param  {[type]} next) 
  * * @return {[type]}       [description]
  */
-router.get('/static.html', function(req, res, next) {
+router.get('/static.htm', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
