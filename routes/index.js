@@ -40,7 +40,7 @@ router.get('/static.htm', function(req, res, next) {
 router.get('/songs', function(req, res, next) {
   Song.find(function (err, allSongs) {
     if (err) return console.error(err);
-    res.render('songs', { title:'中国有嘻哈', songs: allSongs });
+    res.render('songs', { title:'歌曲列表', songs: allSongs });
   })
 });
 
@@ -64,13 +64,22 @@ router.post('/saveSong', function (req, res) {
   });
 });
 
-//get测试函数
-router.get('/testSaveSong', function (req, res) {
-  var littleCat = new Song({ name: 'take it easy', lyrics: '嘻哈嘻哈嘻哈' });
-  littleCat.save(function (err, fluffy) {
-    if (err) return console.error(err);
-    console.log('存储成功！')
-    res.send('存储成功！')
+//搜索词库
+router.get('/search', function (req, res) {
+  res.send({message: 'success'})
+  const exec = require('child_process').exec;
+  var options={
+    cwd: '/Users/kaijieqian/kkProject/express-cli/spider',
+    env: process.env
+  },
+  child2 = exec("casperjs spider/searchSong.js " + req.query.keyWord,
+    function (error, stdout, stderr) {
+      if (error !== null) {
+      } else {
+        console.log('exec error: ' + error);
+      }
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
   });
 });
 

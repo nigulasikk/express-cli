@@ -1,9 +1,13 @@
-var searchUrl = 'https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=album&w=%E4%B8%AD%E5%9B%BD%E6%9C%89%E5%98%BB%E5%93%88'
+/**
+ *  根据参数，获取专辑歌曲歌词
+ */
 var albumUrls = [];
 var casper = require('casper').create({
     // verbose: true,
     // logLevel: 'debug'
 });
+var keyWord = casper.cli.args;
+var searchUrl = 'https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=album&w=' + keyWord
 /**
  * 获取专辑列表链接
  * TODO:写成参数的方式
@@ -68,7 +72,7 @@ casper.on("getSongsInfo", function(songs) {
     this.thenOpen(response.data, function(index) {
         this.waitForSelector('#lrc_content', function () {
            this.echo('获取歌词DOM成功！');
-           this.capture('capture/'+ new Date()+'.png');
+           this.capture('spider/capture/'+new Date()+'.png');
            var title = this.getHTML('.data__name h1');
            var lyric = this.getHTML('#lrc_content');
           

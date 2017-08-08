@@ -1,6 +1,8 @@
 extends layout
 
 block content
+  input(placeholder="请输入专辑名字" id="keyWord" )
+  button#search(onclick="search()") 搜索专辑
   h1= title
   ul.song-list
     for song in songs
@@ -8,3 +10,31 @@ block content
         a(href="/songDetail/#{song._id}") #{song.name}
     else
       li sorry, no songs!
+  script.
+    function search(){
+      var keyWord = document.querySelector('#keyWord').value
+      kjax('/search?keyWord='+keyWord,'get', function () {
+        alert('开始收集数据！')
+      })
+    }
+    /**
+     * ajax方法
+     * @param  {[type]}   url      [description]
+     * @param  {[type]}   method   [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    function kjax(url, method, callback) {
+      var xmlhttp = new XMLHttpRequest();
+      if (xmlhttp) {
+        xmlhttp.open(method, url, true);
+        xmlhttp.withCredentials = true;
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var response = JSON.parse(xmlhttp.responseText)
+            callback(response)
+          }
+        };
+        xmlhttp.send();
+      }
+    }
