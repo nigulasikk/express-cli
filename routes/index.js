@@ -55,13 +55,29 @@ router.get('/songDetail/:songId', function(req, res, next) {
 
 // POST method route
 router.post('/saveSong', function (req, res) {
-  console.log(req.body)
-  var littleCat = new Song({ name: req.body.name, lyrics: req.body.lyrics });
-  littleCat.save(function (err, fluffy) {
+  Song.find({ name: req.body.name }, function (err, songByName) {
     if (err) return console.error(err);
-    console.log('存储成功！')
-    res.send('存储成功！')
-  });
+    /**
+     * 检查歌曲是否已在数据库里
+     * @param  {[type]} songByName.length >             0 [description]
+     * @return {[type]}                   [description]
+     */
+    if (songByName.length > 0) {
+      console.log('此歌曲已录入--'+req.body.name)
+      res.send('此歌曲已录入--'+req.body.name)
+    } else {
+      /**
+       * 歌曲录入
+       * @type {Song}
+       */
+      var littleSong = new Song({ name: req.body.name, lyrics: req.body.lyrics });
+      littleSong.save(function (err, fluffy) {
+        if (err) return console.error(err);
+        console.log('录入歌曲成功！--'+req.body.name)
+        res.send('录入歌曲成功！--'+req.body.name)
+      });
+    }
+  })
 });
 
 //搜索词库
