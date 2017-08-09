@@ -1,5 +1,6 @@
 extends layout
 
 block content
-  h1= song.name
+  img(src="#{song.photo}")
+  h1.song-name= song.name
   div !{song.lyrics}

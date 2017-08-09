@@ -72,10 +72,10 @@ casper.on("getSongsInfo", function(songs) {
     this.thenOpen(response.data, function(index) {
         this.waitForSelector('#lrc_content', function () {
            this.echo('获取歌词DOM成功！');
-           this.capture('spider/capture/'+new Date()+'.png');
+           // this.capture('spider/capture/'+new Date()+'.png');
            var title = this.getHTML('.data__name h1');
            var lyric = this.getHTML('#lrc_content');
-          
+           var photo = this.getElementAttribute('.data__photo', 'src');
            /**
             * 当DOM已经出现，但歌词还没加载出来的时候
             * @param  {[type]} lyric.length.length [description]
@@ -87,13 +87,13 @@ casper.on("getSongsInfo", function(songs) {
                   lyric = this.getHTML('#lrc_content');
                   // this.echo(title);
                   // this.echo(lyric);
-                  this.emit("postSong", {name: title, lyrics: lyric});
+                  this.emit("postSong", {name: title, lyrics: lyric, photo: photo});
               });
            } else {
              this.echo('歌词已存在DOM中，直接获取成功');
              // this.echo(title);
              // this.echo(lyric);
-             this.emit("postSong", {name: title, lyrics: lyric});
+             this.emit("postSong", {name: title, lyrics: lyric, photo: photo});
            }
         },function () {
             this.echo('获取歌词DOM超时');

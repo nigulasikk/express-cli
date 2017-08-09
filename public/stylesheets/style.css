@@ -24,3 +24,8 @@ a {
   margin-top:10px;
   background: white;
 }
+.song-name{
+  display: inline-block;
+  vertical-align: top;
+  margin-left:30px;
+}

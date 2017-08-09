@@ -11,6 +11,7 @@ db.once('open', function() {
 });
 var SongSchema = mongoose.Schema({
     name: String,
+    photo: String,
     lyrics: String
 });
 /**
@@ -70,7 +71,7 @@ router.post('/saveSong', function (req, res) {
        * 歌曲录入
        * @type {Song}
        */
-      var littleSong = new Song({ name: req.body.name, lyrics: req.body.lyrics });
+      var littleSong = new Song({ name: req.body.name, lyrics: req.body.lyrics, photo: req.body.photo  });
       littleSong.save(function (err, fluffy) {
         if (err) return console.error(err);
         console.log('录入歌曲成功！--'+req.body.name)
