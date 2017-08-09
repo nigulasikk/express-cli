@@ -6,7 +6,6 @@ var casper = require('casper').create({
 });
 /**
  * 获取专辑列表链接
- * TODO:写成参数的方式
  * @return {[type]} [description]
  */
 function getAlbumLinks(linkClass) {
@@ -17,13 +16,17 @@ function getAlbumLinks(linkClass) {
 }
 /**
  * 歌曲儿
- * TODO:写成参数的方式
  * @return {[type]} [description]
  */
 function getSongLinks(linkClass) {
     var links = document.querySelectorAll('.songlist__songname_txt a');
     return Array.prototype.map.call(links, function(e) {
-        return e.getAttribute('href');
+        var url = e.getAttribute('href')
+        if(/http.+/.test(url)) {
+          return url;
+        } else {
+          return 'https:'+url;
+        }
     });
 }
 /**
@@ -45,6 +48,7 @@ casper.start(searchUrl, function() {
             this.echo(this.getTitle());
             this.waitForSelector('.songlist__list', function () {
               var songs = this.evaluate(getSongLinks);
+              console.log(songs)
               this.emit("getSongsInfo", songs);
             });
         });
@@ -68,10 +72,10 @@ casper.on("getSongsInfo", function(songs) {
     this.thenOpen(response.data, function(index) {
         this.waitForSelector('#lrc_content', function () {
            this.echo('获取歌词DOM成功！');
-           this.capture('capture/'+ new Date()+'.png');
+           // this.capture('spider/capture/'+new Date()+'.png');
            var title = this.getHTML('.data__name h1');
            var lyric = this.getHTML('#lrc_content');
-          
+           var photo = this.getElementAttribute('.data__photo', 'src');
            /**
             * 当DOM已经出现，但歌词还没加载出来的时候
             * @param  {[type]} lyric.length.length [description]
@@ -81,15 +85,15 @@ casper.on("getSongsInfo", function(songs) {
               this.waitForSelectorTextChange('#lrc_content', function() {
                   this.echo('歌词插入DOM成功');
                   lyric = this.getHTML('#lrc_content');
-                  // this.echo(title);
-                  // this.echo(lyric);
-                  this.emit("postSong", {name: title, lyrics: lyric});
+                  this.echo(title);
+                  this.echo(lyric);
+                  this.emit("postSong", {name: title, lyrics: lyric, photo: photo});
               });
            } else {
              this.echo('歌词已存在DOM中，直接获取成功');
-             // this.echo(title);
-             // this.echo(lyric);
-             this.emit("postSong", {name: title, lyrics: lyric});
+             this.echo(title);
+             this.echo(lyric);
+             this.emit("postSong", {name: title, lyrics: lyric, photo: photo});
            }
         },function () {
             this.echo('获取歌词DOM超时');

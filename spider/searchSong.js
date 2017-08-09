@@ -10,7 +10,6 @@ var keyWord = casper.cli.args;
 var searchUrl = 'https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=album&w=' + keyWord
 /**
  * 获取专辑列表链接
- * TODO:写成参数的方式
  * @return {[type]} [description]
  */
 function getAlbumLinks(linkClass) {
@@ -21,13 +20,17 @@ function getAlbumLinks(linkClass) {
 }
 /**
  * 歌曲儿
- * TODO:写成参数的方式
  * @return {[type]} [description]
  */
 function getSongLinks(linkClass) {
     var links = document.querySelectorAll('.songlist__songname_txt a');
     return Array.prototype.map.call(links, function(e) {
-        return e.getAttribute('href');
+        var url = e.getAttribute('href')
+        if(/http.+/.test(url)) {
+          return url;
+        } else {
+          return 'https:'+url;
+        }
     });
 }
 /**
