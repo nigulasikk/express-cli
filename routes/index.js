@@ -1,44 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
-var db = mongoose.connection;
+var Song = require('../model/Song');
 
-mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  // we're connected!
-  console.log(' mongo connected! open!')
-});
-var SongSchema = mongoose.Schema({
-    name: String,
-    photo: String,
-    lyrics: String
-});
-/**
- * 这里可以定义Schema方法
- * @return {[type]} [description]
- */
-SongSchema.methods.speak = function () {
-  console.log('hello:' + this.name)
-}
-var Song = mongoose.model('Song', SongSchema);
-
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-/**
- * 伪静态的尝试
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next) 
- * * @return {[type]}       [description]
- */
-router.get('/static.htm', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.get('/songs', function(req, res, next) {
   Song.find(function (err, allSongs) {
     if (err) return console.error(err);
     res.render('songs', { title:'歌曲列表', songs: allSongs });
